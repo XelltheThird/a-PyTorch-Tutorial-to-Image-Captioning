@@ -1,0 +1,9 @@
+/Flickr_Data
+*.jpg
+*.jpeg
+*.pdf
+*.json
+*.pth.tar
+*.hdf5
+/results
+*.pyc
