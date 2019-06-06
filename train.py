@@ -17,6 +17,7 @@ data_folder = "results/"
 data_name = "flickr8k_1_cap_per_img_5_min_word_freq"
 
 # Model parameters
+use_doubly_stochastic_attention = True
 emb_dim = 256  # dimension of word embeddings
 attention_dim = 512  # dimension of attention linear layers
 decoder_dim = 1024  # dimension of decoder RNN
@@ -58,7 +59,8 @@ def main():
                                        embed_dim=emb_dim,
                                        decoder_dim=decoder_dim,
                                        vocab_size=len(word_map),
-                                       dropout=dropout)
+                                       dropout=dropout, 
+                                       use_doubly_stochastic_attention=use_doubly_stochastic_attention)
         decoder_optimizer = torch.optim.Adam(params=filter(lambda p: p.requires_grad, decoder.parameters()),
                                              lr=decoder_lr)
         encoder = Encoder()
@@ -192,8 +194,10 @@ def train(train_loader, encoder, decoder, criterion, encoder_optimizer, decoder_
         # Calculate loss
         loss = criterion(scores, targets)
 
-        # Add doubly stochastic attention regularization
-        loss += alpha_c * ((1. - alphas.sum(dim=1)) ** 2).mean()
+        if use_doubly_stochastic_attention:
+            # Add doubly stochastic attention regularization
+            print("alphas size: ", alphas.size())
+            loss += alpha_c * ((1. - alphas.sum(dim=1)) ** 2).mean()
 
         # Back prop.
         decoder_optimizer.zero_grad()

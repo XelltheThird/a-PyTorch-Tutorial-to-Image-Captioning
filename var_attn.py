@@ -626,7 +626,7 @@ def _compute_loss(
         kl = torch.zeros(1).to(xent)
         loss = xent
 
-    # subtract reward
+    # subtract reward 
     if self.generator.mode == 'gumbel':
         assert q_sample_log_probs is None
     if q_sample_log_probs is not None:
