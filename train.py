@@ -14,7 +14,7 @@ from nltk.translate.bleu_score import corpus_bleu
 #data_folder = '/media/ssd/caption data'  # folder with data files saved by create_input_files.py
 data_folder = "results/"
 #data_name = 'coco_5_cap_per_img_5_min_word_freq'  # base name shared by data files
-data_name = "flickr8k_1_cap_per_img_5_min_word_freq"
+data_name = "flickr8k_5_cap_per_img_5_min_word_freq"
 
 # Model parameters
 use_doubly_stochastic_attention = True

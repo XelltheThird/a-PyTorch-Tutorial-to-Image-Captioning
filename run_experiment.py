@@ -2,6 +2,7 @@ from train import main
 import os
 import matplotlib.pyplot as plt
 import numpy as np
+import argparse
 from multiCaptionGenerator import genVis
 
 
