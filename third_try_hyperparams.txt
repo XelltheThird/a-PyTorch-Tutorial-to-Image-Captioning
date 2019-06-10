@@ -1,0 +1,20 @@
+use_doubly_stochastic_attention = True
+emb_dim = 256  # dimension of word embeddings
+attention_dim = 1024  # dimension of attention linear layers
+decoder_dim = 1024  # dimension of decoder RNN
+dropout = 0.5
+#torch.cuda.set_device(2)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")  # sets device for model and PyTorch tensors
+print("Device: ", device)
+cudnn.benchmark = True  # set to true only if inputs to model are fixed size; otherwise lot of computational overhead
+
+# Training parameters
+start_epoch = 0
+epochs = 100  # number of epochs to train for (if early stopping is not triggered)
+epochs_since_improvement = 0  # keeps track of number of epochs since there's been an improvement in validation BLEU
+batch_size = 32
+workers = 1  # for data-loading; right now, only 1 works with h5py
+encoder_lr = 0.005#1e-4  # learning rate for encoder if fine-tuning
+decoder_lr = 0.005#4e-4  # learning rate for decoder
+grad_clip = 5.  # clip gradients at an absolute value of
+alpha_c = 1. 

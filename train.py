@@ -42,12 +42,15 @@ fine_tune_encoder = False  # fine-tune encoder?
 checkpoint = None  # path to checkpoint, None if none
 
 
-def main():
+def main(path="", name=""):
     """
     Training and validation.
     """
 
     global best_bleu4, epochs_since_improvement, checkpoint, start_epoch, fine_tune_encoder, data_name, word_map
+    
+    # log dict:
+    log = {"train_acc": [], "val_acc": [], "val_bleu4":[]}
 
     # Read word map
     word_map_file = os.path.join(data_folder, 'WORDMAP_' + data_name + '.json')
@@ -106,13 +109,13 @@ def main():
         # Decay learning rate if there is no improvement for 8 consecutive epochs, and terminate training after 20
         if epochs_since_improvement == 20:
             break
-        if epochs_since_improvement > 0 and epochs_since_improvement % 8 == 0:
-            adjust_learning_rate(decoder_optimizer, 0.8)
+        if epochs_since_improvement > 0 and epochs_since_improvement % 4 == 0:
+            adjust_learning_rate(decoder_optimizer, 0.5)
             if fine_tune_encoder:
-                adjust_learning_rate(encoder_optimizer, 0.8)
+                adjust_learning_rate(encoder_optimizer, 0.5)
 
         # One epoch's training
-        train(train_loader=train_loader,
+        train_accuracy = train(train_loader=train_loader,
               encoder=encoder,
               decoder=decoder,
               criterion=criterion,
@@ -121,10 +124,15 @@ def main():
               epoch=epoch)
 
         # One epoch's validation
-        recent_bleu4 = validate(val_loader=val_loader,
+        recent_bleu4, validation_accuracy = validate(val_loader=val_loader,
                                 encoder=encoder,
                                 decoder=decoder,
                                 criterion=criterion)
+                                
+        # Store accuracies and bleu score for visualization:
+        log["val_bleu4"].append(recent_bleu4)
+        log["val_acc"].append(validation_accuracy)
+        log["train_acc"].append(train_accuracy)
 
         # Check if there was an improvement
         is_best = recent_bleu4 > best_bleu4
@@ -137,7 +145,8 @@ def main():
 
         # Save checkpoint
         save_checkpoint(data_name, epoch, epochs_since_improvement, encoder, decoder, encoder_optimizer,
-                        decoder_optimizer, recent_bleu4, is_best)
+                        decoder_optimizer, recent_bleu4, is_best, path, name)
+    return log
 
 
 def train(train_loader, encoder, decoder, criterion, encoder_optimizer, decoder_optimizer, epoch):
@@ -235,6 +244,7 @@ def train(train_loader, encoder, decoder, criterion, encoder_optimizer, decoder_
                                                                           batch_time=batch_time,
                                                                           data_time=data_time, loss=losses,
                                                                           top5=top5accs))
+    return top5accs.avg
 
 
 def validate(val_loader, encoder, decoder, criterion):
@@ -341,7 +351,7 @@ def validate(val_loader, encoder, decoder, criterion):
                 top5=top5accs,
                 bleu=bleu4))
 
-    return bleu4
+    return bleu4, top5accs.avg
 
 
 if __name__ == '__main__':

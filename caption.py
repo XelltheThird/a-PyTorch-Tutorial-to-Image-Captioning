@@ -7,7 +7,9 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import skimage.transform
 import argparse
-from scipy.misc import imread, imresize
+#from scipy.misc import imread, imresize # deprecated!
+from skimage.transform import resize as imresize
+from imageio import imread
 from PIL import Image
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -188,16 +190,16 @@ def visualize_att(image_path, seq, alphas, rev_word_map, smooth=True):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Show, Attend, and Tell - Tutorial - Generate Caption')
 
-    parser.add_argument('--img', '-i', help='path to image')
-    parser.add_argument('--model', '-m', help='path to model')
-    parser.add_argument('--word_map', '-wm', help='path to word map JSON')
+    parser.add_argument('--img', '-i', default="scooter_boy.jpg", help='path to image')
+    parser.add_argument('--model', '-m', default="test.pth.tar", help='path to model')
+    parser.add_argument('--word_map', '-wm', default="results/WORDMAP_flickr8k_1_cap_per_img_5_min_word_freq.json", help='path to word map JSON')
     parser.add_argument('--beam_size', '-b', default=5, type=int, help='beam size for beam search')
     parser.add_argument('--dont_smooth', dest='smooth', action='store_false', help='do not smooth alpha overlay')
 
     args = parser.parse_args()
 
     # Load model
-    checkpoint = torch.load(args.model)
+    checkpoint = torch.load(args.model, map_location="cpu")
     decoder = checkpoint['decoder']
     decoder = decoder.to(device)
     decoder.eval()
