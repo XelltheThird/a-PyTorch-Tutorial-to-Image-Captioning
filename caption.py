@@ -1,3 +1,4 @@
+
 import torch
 import torch.nn.functional as F
 import numpy as np
@@ -190,9 +191,9 @@ def visualize_att(image_path, seq, alphas, rev_word_map, smooth=True):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Show, Attend, and Tell - Tutorial - Generate Caption')
 
-    parser.add_argument('--img', '-i', default="scooter_boy.jpg", help='path to image')
-    parser.add_argument('--model', '-m', default="test.pth.tar", help='path to model')
-    parser.add_argument('--word_map', '-wm', default="results/WORDMAP_flickr8k_1_cap_per_img_5_min_word_freq.json", help='path to word map JSON')
+    parser.add_argument('--img', '-i', default="VisualisationTest/girlsintech2.jpg", help='path to image') #Flickr_Data/Images/667626_18933d713e.jpg
+    parser.add_argument('--model', '-m', default="BEST_checkpoint_flickr8k_5_cap_per_img_5_min_word_freq.pth.tar", help='path to model')
+    parser.add_argument('--word_map', '-wm', default="results/WORDMAP_flickr8k_5_cap_per_img_5_min_word_freq.json", help='path to word map JSON')
     parser.add_argument('--beam_size', '-b', default=5, type=int, help='beam size for beam search')
     parser.add_argument('--dont_smooth', dest='smooth', action='store_false', help='do not smooth alpha overlay')
 
