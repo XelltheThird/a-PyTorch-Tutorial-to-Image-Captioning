@@ -235,7 +235,7 @@ def save_checkpoint(data_name, epoch, epochs_since_improvement, encoder, decoder
              'encoder_optimizer': encoder_optimizer,
              'decoder_optimizer': decoder_optimizer}
     filename = path
-    if name = "":
+    if name == "":
         filename += 'checkpoint_' + data_name + '.pth.tar'
     else:
         filename += name + '.pth.tar'

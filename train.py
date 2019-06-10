@@ -18,9 +18,9 @@ data_name = "flickr8k_1_cap_per_img_5_min_word_freq"
 
 # Model parameters
 use_doubly_stochastic_attention = True
-emb_dim = 256  # dimension of word embeddings
-attention_dim = 512  # dimension of attention linear layers
-decoder_dim = 1024  # dimension of decoder RNN
+emb_dim = 8  # dimension of word embeddings
+attention_dim = 8  # dimension of attention linear layers
+decoder_dim = 8  # dimension of decoder RNN
 dropout = 0#0.5
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")  # sets device for model and PyTorch tensors
 print("Device: ", device)
@@ -28,7 +28,7 @@ cudnn.benchmark = True  # set to true only if inputs to model are fixed size; ot
 
 # Training parameters
 start_epoch = 0
-epochs = 50  # number of epochs to train for (if early stopping is not triggered)
+epochs = 3  # number of epochs to train for (if early stopping is not triggered)
 epochs_since_improvement = 0  # keeps track of number of epochs since there's been an improvement in validation BLEU
 batch_size = 16
 workers = 1  # for data-loading; right now, only 1 works with h5py
