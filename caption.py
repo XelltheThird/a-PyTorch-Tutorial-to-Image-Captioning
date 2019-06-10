@@ -8,8 +8,10 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import skimage.transform
 import argparse
-#import Image
-from scipy.misc import imread, imresize
+
+#from scipy.misc import imread, imresize # deprecated!
+from skimage.transform import resize as imresize
+from imageio import imread
 from PIL import Image
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -206,7 +208,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Load model
-    checkpoint = torch.load(args.model)
+    checkpoint = torch.load(args.model, map_location="cpu")
     decoder = checkpoint['decoder']
     decoder = decoder.to(device)
     decoder.eval()
