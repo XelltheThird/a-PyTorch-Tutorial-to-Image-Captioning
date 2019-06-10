@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import skimage.transform
 import argparse
+#import Image
 from scipy.misc import imread, imresize
 from PIL import Image
 
@@ -148,7 +149,7 @@ def caption_image_beam_search(encoder, decoder, image_path, word_map, beam_size=
     return seq, alphas
 
 
-def visualize_att(image_path, seq, alphas, rev_word_map, smooth=True):
+def visualize_att(image_path, seq, alphas, rev_word_map, tvr, folder='', smooth=True):
     """
     Visualizes caption with weights at every word.
 
@@ -159,6 +160,8 @@ def visualize_att(image_path, seq, alphas, rev_word_map, smooth=True):
     :param alphas: weights
     :param rev_word_map: reverse word mapping, i.e. ix2word
     :param smooth: smooth weights?
+    :param tvr: train/validate/random picture?
+    :param folder: folder to save output in
     """
     image = Image.open(image_path)
     image = image.resize([14 * 24, 14 * 24], Image.LANCZOS)
@@ -183,16 +186,21 @@ def visualize_att(image_path, seq, alphas, rev_word_map, smooth=True):
             plt.imshow(alpha, alpha=0.8)
         plt.set_cmap(cm.Greys_r)
         plt.axis('off')
-    plt.show()
+    plt.savefig(folder + tvr + '.png')
+    #Image.open('test.png').save('test.jpg','JPEG')
+    #plt.show()
+
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Show, Attend, and Tell - Tutorial - Generate Caption')
 
-    parser.add_argument('--img', '-i', default="VisualisationTest/girlsintech2.jpg", help='path to image') #Flickr_Data/Images/667626_18933d713e.jpg
+    parser.add_argument('--img', '-i', default="VisualisationTest/flosexy.jpg", help='path to image') #Flickr_Data/Images/667626_18933d713e.jpg
     parser.add_argument('--model', '-m', default="BEST_checkpoint_flickr8k_5_cap_per_img_5_min_word_freq.pth.tar", help='path to model')
     parser.add_argument('--word_map', '-wm', default="results/WORDMAP_flickr8k_5_cap_per_img_5_min_word_freq.json", help='path to word map JSON')
     parser.add_argument('--beam_size', '-b', default=5, type=int, help='beam size for beam search')
+    parser.add_argument('--train_validate_random', '-tvr', default="train", help='train, validate or random')
+    parser.add_argument('--folder', '-f', default="", help='folder')
     parser.add_argument('--dont_smooth', dest='smooth', action='store_false', help='do not smooth alpha overlay')
 
     args = parser.parse_args()
@@ -216,4 +224,4 @@ if __name__ == '__main__':
     alphas = torch.FloatTensor(alphas)
 
     # Visualize caption and attention of best sequence
-    visualize_att(args.img, seq, alphas, rev_word_map, args.smooth)
+    visualize_att(args.img, seq, alphas, rev_word_map, args.train_validate_random, args.folder, args.smooth)
