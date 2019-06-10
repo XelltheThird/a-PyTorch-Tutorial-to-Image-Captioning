@@ -12,7 +12,7 @@ parser.add_argument('--runs', '-r', default=3, help='how often the conditions is
 args = parser.parse_args()
 
 folder_name = args.folder
-runs = args.runs
+runs = int(args.runs)
 
 if not os.path.exists(folder_name):
     os.mkdir(folder_name)
@@ -23,6 +23,7 @@ logs = []
 for i in range(runs):
     current_log = main(path = folder_name + "/", name = str(i))
     logs.append(current_log)
+
  
  
 # Plot averaged accuracies and blue score:
