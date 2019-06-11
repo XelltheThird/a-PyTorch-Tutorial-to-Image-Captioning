@@ -188,7 +188,16 @@ def visualize_att(image_path, seq, alphas, rev_word_map, tvr, folder='', smooth=
             plt.imshow(alpha, alpha=0.8)
         plt.set_cmap(cm.Greys_r)
         plt.axis('off')
-    plt.savefig(folder + tvr + '.png')
+        
+        
+    # get image name
+    slash_pos = 0
+    for idx, ch in enumerate(image_path):
+        if ch == "/":
+            slash_pos = idx
+    image_name = image_path[slash_pos:-4]
+        
+    plt.savefig(folder + image_name + '.png')
     #Image.open('test.png').save('test.jpg','JPEG')
     #plt.show()
 
@@ -208,7 +217,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Load model
-    checkpoint = torch.load(args.folder + "/" + args.model, map_location="cpu")
+    path = args.folder + ("/" if args.folder != "" else "")
+    checkpoint = torch.load(path + args.model, map_location="cpu")
     decoder = checkpoint['decoder']
     decoder = decoder.to(device)
     decoder.eval()
