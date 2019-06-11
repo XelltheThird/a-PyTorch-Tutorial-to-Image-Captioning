@@ -32,8 +32,8 @@ best_bleu = 0
 best_run = -1
 for key in logs[0]:
     key_data = np.zeros((runs, logs_length))
-    for run in logs:
-        data = logs[key]
+    for run in range(len(logs)):
+        data = logs[run][key]
         key_data[run] = data
         
         # Evaluate quality of model

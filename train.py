@@ -46,9 +46,16 @@ def main(path="", name=""):
     """
     Training and validation.
     """
+    
 
     global best_bleu4, epochs_since_improvement, checkpoint, start_epoch, fine_tune_encoder, data_name, word_map
     
+    start_epoch = 0
+    best_bleu4 = 0.  # BLEU-4 score right now
+    epochs_since_improvement = 0  # keeps track of number of epochs since there's been an improvement
+
+
+
     # log dict:
     log = {"train_acc": [], "val_acc": [], "val_bleu4":[]}
 
