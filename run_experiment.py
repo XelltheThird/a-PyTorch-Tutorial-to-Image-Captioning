@@ -62,7 +62,7 @@ plt.legend()
 plt.title('Evaluation metrics over training time')
 plt.xlabel('Epochs')
 plt.ylabel('Value of Metric')
-plt.savefig("Metrics.pdf")
+plt.savefig(folder_name + "/" + "Metrics.pdf")
     
 
 # Create Attention Images for best model:

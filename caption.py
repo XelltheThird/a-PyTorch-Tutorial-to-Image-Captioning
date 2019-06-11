@@ -198,8 +198,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Show, Attend, and Tell - Tutorial - Generate Caption')
 
     parser.add_argument('--img', '-i', default="VisualisationTest/flosexy.jpg", help='path to image') #Flickr_Data/Images/667626_18933d713e.jpg
-    parser.add_argument('--model', '-m', default="BEST_checkpoint_flickr8k_5_cap_per_img_5_min_word_freq.pth.tar", help='path to model')
-    parser.add_argument('--word_map', '-wm', default="results/WORDMAP_flickr8k_5_cap_per_img_5_min_word_freq.json", help='path to word map JSON')
+    parser.add_argument('--model', '-m', default="BEST_checkpoint_flickr8k_1_cap_per_img_5_min_word_freq.pth.tar", help='path to model')
+    parser.add_argument('--word_map', '-wm', default="results/WORDMAP_flickr8k_1_cap_per_img_5_min_word_freq.json", help='path to word map JSON')
     parser.add_argument('--beam_size', '-b', default=5, type=int, help='beam size for beam search')
     parser.add_argument('--train_validate_random', '-tvr', default="train", help='train, validate or random')
     parser.add_argument('--folder', '-f', default="", help='folder')
@@ -208,7 +208,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Load model
-    checkpoint = torch.load(args.model, map_location="cpu")
+    checkpoint = torch.load(args.folder + "/" + args.model, map_location="cpu")
     decoder = checkpoint['decoder']
     decoder = decoder.to(device)
     decoder.eval()
