@@ -38,7 +38,7 @@ for key in logs[0]:
         
         # Evaluate quality of model
         if key == "val_bleu4":
-            max_bleu = data.max()
+            max_bleu = max(data)
             if max_bleu > best_bleu:
                 best_bleu = max_bleu
                 best_run = run
