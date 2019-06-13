@@ -236,7 +236,7 @@ def save_checkpoint(data_name, epoch, epochs_since_improvement, encoder, decoder
              'decoder_optimizer': decoder_optimizer}
     filename = path
     
-    if not os.path.exists(path):
+    if path != "" and  not os.path.exists(path):
         os.mkdir(path)
     
     if name == "":
