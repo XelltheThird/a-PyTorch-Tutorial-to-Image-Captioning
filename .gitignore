@@ -6,3 +6,5 @@
 *.pyc
 *.tar
 /.idea
+/NN_venv
+/results_5_caps
