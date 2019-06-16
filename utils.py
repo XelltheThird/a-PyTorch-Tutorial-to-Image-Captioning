@@ -3,10 +3,7 @@ import numpy as np
 import h5py
 import json
 import torch
-from PIL.Image import Image as Image
-imresize = Image.resize
-
-from skimage.transform import resize as imresize
+import PIL
 from imageio import imread
 from tqdm import tqdm
 from collections import Counter
@@ -118,11 +115,15 @@ def create_input_files(dataset, karpathy_json_path, image_folder, captions_per_i
                 # Read images
                 #import PIL.Image as Image
                 img = imread(impaths[i])
+                
+                
+
                 #img = Image.open(impaths[i])
                 if len(img.shape) == 2:
                     img = img[:, :, np.newaxis]
                     img = np.concatenate([img, img, img], axis=2)
-                img = imresize(img, (256, 256))
+                #img = imresize(img, (256, 256))
+                img = np.array(PIL.Image.fromarray(img_io).resize((256, 256), resample=PIL.Image.BILINEAR))
 
                 img = img.transpose(2, 0, 1)
                 assert img.shape == (3, 256, 256)

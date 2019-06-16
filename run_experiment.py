@@ -31,10 +31,10 @@ logs_length = len(logs[0]['train_acc'])
 best_bleu = 0
 best_run = -1
 for key in logs[0]:
-    key_data = np.zeros((runs, logs_length))
+    key_data = []
     for run in range(len(logs)):
         data = logs[run][key]
-        key_data[run] = data
+        key_data.append(data)
         
         # Evaluate quality of model
         if key == "val_bleu4":
@@ -62,7 +62,7 @@ plt.legend()
 plt.title('Evaluation metrics over training time')
 plt.xlabel('Epochs')
 plt.ylabel('Value of Metric')
-plt.savefig(folder_name + "/" + "Metrics.pdf")
+plt.savefig(folder_name + "/" + "training_curves.pdf")
     
 
 # Create Attention Images for best model:
@@ -71,7 +71,15 @@ folder_name += '/'
 genVis(folder_name, best_model_name)
     
 
-    
+# Save logs to file:
+import pickle
+ 
+ 
+# Step 2
+with open(folder_name + "pickled_logs.json", 'wb') as logs_file:
+ 
+  # Step 3
+  pickle.dump(logs, logs_file)
     
 
     
