@@ -42,7 +42,7 @@ for key in logs[0]:
     key_data.mask = True
     for run in range(len(logs)):
         data = logs[run][key]
-        key_data[run, :data.shape[0]] = data
+        key_data[run, :len(data)] = np.array(data)
         
         # Evaluate quality of model
         if key == "val_bleu4":
