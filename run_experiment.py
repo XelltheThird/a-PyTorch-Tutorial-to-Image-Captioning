@@ -59,32 +59,31 @@ for key in logs[0]:
     upper_bound = data_mean + data_std
     
     # Plot stuff
-    p = plt.plot(range(logs_length), data_mean, label=key)
+    p = plt.plot(range(log_len), data_mean, label=key)
     color = p[0].get_color()
-    plt.fill_between(range(logs_length), lower_bound, upper_bound, alpha=0.5, color=color)
+    plt.fill_between(range(log_len), lower_bound, upper_bound, alpha=0.5, color=color)
     
     
     
+folder_name += '/' 
 
 plt.legend()
 plt.title('Evaluation metrics over training time')
 plt.xlabel('Epochs')
 plt.ylabel('Value of Metric')
-plt.savefig(folder_name + "/" + "training_curves.pdf")
+plt.savefig(folder_name + "training_curves.pdf")
     
 # Save logs to file:
 import pickle
- 
-# Step 2
 with open(folder_name + "pickled_logs.json", 'wb') as logs_file:
- 
-  # Step 3
   pickle.dump(logs, logs_file)
 
 # Create Attention Images for best model:
 best_model_name = "BEST_" + str(best_run) + ".pth.tar"
-folder_name += '/' 
 genVis(folder_name, best_model_name)
+
+model_name = str(best_run) + ".pth.tar"
+genVis(folder_name, model_name)
     
 
 
