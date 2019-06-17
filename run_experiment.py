@@ -27,14 +27,22 @@ for i in range(runs):
  
  
 # Plot averaged accuracies and blue score:
-logs_length = len(logs[0]['train_acc'])
+log_len = 0
+for log in logs:
+    curr_len = len(log['train_acc'])
+    if curr_len > log_len:
+        log_len = curr_len
+
+
 best_bleu = 0
 best_run = -1
 for key in logs[0]:
-    key_data = []
+    # Masked array because runs may have different epoch lengths
+    key_data = np.ma.empty((runs, log_len))
+    key_data.mask = True
     for run in range(len(logs)):
         data = logs[run][key]
-        key_data.append(data)
+        key_data[run, :data.shape[0]] = data
         
         # Evaluate quality of model
         if key == "val_bleu4":
@@ -44,7 +52,7 @@ for key in logs[0]:
                 best_run = run
             
         
-        
+       
     data_mean = key_data.mean(axis=0)
     data_std = key_data.std(axis=0)
     lower_bound = data_mean - data_std
@@ -64,6 +72,14 @@ plt.xlabel('Epochs')
 plt.ylabel('Value of Metric')
 plt.savefig(folder_name + "/" + "training_curves.pdf")
     
+# Save logs to file:
+import pickle
+ 
+# Step 2
+with open(folder_name + "pickled_logs.json", 'wb') as logs_file:
+ 
+  # Step 3
+  pickle.dump(logs, logs_file)
 
 # Create Attention Images for best model:
 best_model_name = "BEST_" + str(best_run) + ".pth.tar"
@@ -71,15 +87,7 @@ folder_name += '/'
 genVis(folder_name, best_model_name)
     
 
-# Save logs to file:
-import pickle
- 
- 
-# Step 2
-with open(folder_name + "pickled_logs.json", 'wb') as logs_file:
- 
-  # Step 3
-  pickle.dump(logs, logs_file)
+
     
 
     
