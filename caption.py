@@ -1,4 +1,3 @@
-
 import torch
 import torch.nn.functional as F
 import numpy as np
@@ -151,7 +150,7 @@ def caption_image_beam_search(encoder, decoder, image_path, word_map, beam_size=
     return seq, alphas
 
 
-def visualize_att(image_path, seq, alphas, rev_word_map, tvr, folder='', smooth=True):
+def visualize_att(image_path, seq, alphas, rev_word_map, tvr, model_name, folder='', smooth=True):
     """
     Visualizes caption with weights at every word.
 
@@ -164,6 +163,7 @@ def visualize_att(image_path, seq, alphas, rev_word_map, tvr, folder='', smooth=
     :param smooth: smooth weights?
     :param tvr: train/validate/random picture?
     :param folder: folder to save output in
+    :param model_name: model name
     """
     image = Image.open(image_path)
     image = image.resize([14 * 24, 14 * 24], Image.LANCZOS)
@@ -197,7 +197,7 @@ def visualize_att(image_path, seq, alphas, rev_word_map, tvr, folder='', smooth=
             slash_pos = idx
     image_name = image_path[slash_pos:-4]
         
-    plt.savefig(folder + image_name + '.png')
+    plt.savefig(folder + image_name + model_name[:-8] + '.png')
     #Image.open('test.png').save('test.jpg','JPEG')
     #plt.show()
 
@@ -226,6 +226,8 @@ if __name__ == '__main__':
     encoder = encoder.to(device)
     encoder.eval()
 
+    model_name = args.model
+
     # Load word map (word2ix)
     with open(args.word_map, 'r') as j:
         word_map = json.load(j)
@@ -236,4 +238,4 @@ if __name__ == '__main__':
     alphas = torch.FloatTensor(alphas)
 
     # Visualize caption and attention of best sequence
-    visualize_att(args.img, seq, alphas, rev_word_map, args.train_validate_random, args.folder, args.smooth)
+    visualize_att(args.img, seq, alphas, rev_word_map, args.train_validate_random, model_name, args.folder, args.smooth)
